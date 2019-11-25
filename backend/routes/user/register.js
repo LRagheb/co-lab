@@ -12,25 +12,25 @@ module.exports=async (req,res)=>{
 
     //if there are missing fields
     if(!errors.isEmpty()){
-        return res.status(400).json({errors: errors.array()});
+        return res.status(400).json({message: errors.array().toString});
     }
 
     console.log('new User attempt');
 
     //pull from request
     const {email,password,username,
-           firstname,lastname,isSponsor}=req.body;
+           firstname,lastname,phone,isSponsor}=req.body;
     
     try {
         //see if email exists
        let colaber=await Colaber.findOne({email}) ;
        if(colaber){
-           return res.status(400).json({ errors: [{ msg: 'Email already exists' }] });
+           return res.status(400).json({message: 'Email already exists'});
        }
        //see if username exists
        colaber=await Colaber.findOne({username}) ;
        if(colaber){
-           return res.status(400).json({ errors: [{ msg: 'Username already exists' }] });
+           return res.status(400).json({ message: 'Username already exists'});
        }
 
        colaber=new Colaber({
@@ -39,6 +39,7 @@ module.exports=async (req,res)=>{
         username,
         firstName: firstname,
         lastName: lastname,
+        phone,
         isSponsor,
         isPremium:  false,
     });
